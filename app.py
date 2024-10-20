@@ -53,7 +53,7 @@ filtered_data = cleaned_data[
 
 # Selectbox for ORDER QTY
 if not filtered_data.empty:
-    order_qty = st.selectbox('Select Order Quantity', filtered_data['ORDER QTY'].unique())
+    order_qty = st.selectbox('Select Order Quantity', filtered_data['ORDER QTY '].unique())
 else:
     st.write("No available Order Quantities for the selected filters.")
 
