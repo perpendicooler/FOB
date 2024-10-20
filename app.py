@@ -51,9 +51,9 @@ filtered_data = cleaned_data[
     (cleaned_data['CONTRY'] == country)
 ]
 
-# Selectbox for ORDER QTY
+# Input field for ORDER QTY as a number
 if not filtered_data.empty:
-    order_qty = st.selectbox('Select Order Quantity', filtered_data['ORDER QTY '].unique())
+    order_qty = st.number_input('Enter Order Quantity', min_value=1, value=1, step=1)
 else:
     st.write("No available Order Quantities for the selected filters.")
 
@@ -64,7 +64,7 @@ if st.button('Predict FOB'):
         'STYLE': [style],
         'Department': [department],
         'PRODUCT DES.': [product_des],
-        'ORDER QTY': [order_qty],  # Use the order quantity from the selectbox
+        'ORDER QTY': [order_qty],  # Use the order quantity from the number input
         'BUYER': [buyer],
         'CONTRY': [country]
     })
@@ -95,7 +95,7 @@ if st.button('Predict FOB'):
             (cleaned_data['STYLE'] == style) &
             (cleaned_data['Department'] == department) &
             (cleaned_data['PRODUCT DES.'].str.contains(product_des, case=False)) &
-            (cleaned_data['ORDER QTY'] == order_qty) &
+            (cleaned_data['ORDER QTY'] == order_qty) &  # Match the order quantity
             (cleaned_data['BUYER'] == buyer) &
             (cleaned_data['CONTRY'] == country)
         ]
