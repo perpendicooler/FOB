@@ -29,13 +29,13 @@ cleaned_data = clean_data(cleaned_data)
 st.title('FOB Prediction App')
 
 # Show cleaned data in the app
-st.subheader('Cleaned Data')
+st.subheader('FOB_data')
 st.write(cleaned_data)
 
 # Input fields for user to input data
 style = st.selectbox('Select Style', cleaned_data['STYLE'].unique())
 department = st.selectbox('Select Department', cleaned_data['Department'].unique())
-product_des = st.text_input('Product Description', '')
+product_des = st.selectbox('Product Description', '')
 order_qty = st.number_input('Order Quantity', min_value=1, step=1)
 buyer = st.selectbox('Select Buyer', cleaned_data['BUYER'].unique())
 country = st.selectbox('Select Country', cleaned_data['CONTRY'].unique())
