@@ -55,6 +55,9 @@ if st.button('Predict FOB'):
         'CONTRY': [country]
     })
 
+    # Strip spaces from the input data column names
+    input_data.columns = input_data.columns.str.strip()
+
     # Make predictions using the models
     predictions = {
         'Linear Regression': lr_model.predict(input_data)[0],
