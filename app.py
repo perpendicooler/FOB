@@ -58,38 +58,46 @@ if st.button('Predict FOB'):
     # Strip spaces from the input data column names
     input_data.columns = input_data.columns.str.strip()
 
-    # Make predictions using the models
-    predictions = {
-        'Linear Regression': lr_model.predict(input_data)[0],
-        'Random Forest': rf_model.predict(input_data)[0],
-        'Gradient Boosting': gb_model.predict(input_data)[0],
-        'XGBoost': xgb_model.predict(input_data)[0]
-    }
+    # Check expected columns for the model
+    expected_columns = lr_model.feature_names_in_  # This assumes your model has this attribute
 
-    # Display predictions
-    st.subheader('Predictions')
-    for model_name, prediction in predictions.items():
-        st.write(f'{model_name} Prediction: {prediction}')
-
-    # Match the input data with the cleaned data
-    matches = cleaned_data[
-        (cleaned_data['STYLE'] == style) &
-        (cleaned_data['Department'] == department) &
-        (cleaned_data['PRODUCT DES.'].str.contains(product_des, case=False)) &
-        (cleaned_data['ORDER QTY'] == order_qty) &
-        (cleaned_data['BUYER'] == buyer) &
-        (cleaned_data['CONTRY'] == country)
-    ]
-
-    # Check for matches and calculate relative error
-    if not matches.empty:
-        st.subheader('Exact Matches Found:')
-        st.write(matches)
-
-        # Calculate and display relative errors
-        actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
-        for model_name, prediction in predictions.items():
-            relative_error = calculate_relative_error(actual_fob, prediction)
-            st.write(f'Relative Error for {model_name}: {relative_error:.2f}%')
+    # Ensure input_data has the required columns
+    missing_columns = set(expected_columns) - set(input_data.columns)
+    if missing_columns:
+        st.error(f"Missing columns: {missing_columns}")
     else:
-        st.write("No exact matches found.")
+        # Make predictions using the models
+        predictions = {
+            'Linear Regression': lr_model.predict(input_data)[0],
+            'Random Forest': rf_model.predict(input_data)[0],
+            'Gradient Boosting': gb_model.predict(input_data)[0],
+            'XGBoost': xgb_model.predict(input_data)[0]
+        }
+
+        # Display predictions
+        st.subheader('Predictions')
+        for model_name, prediction in predictions.items():
+            st.write(f'{model_name} Prediction: {prediction}')
+
+        # Match the input data with the cleaned data
+        matches = cleaned_data[
+            (cleaned_data['STYLE'] == style) &
+            (cleaned_data['Department'] == department) &
+            (cleaned_data['PRODUCT DES.'].str.contains(product_des, case=False)) &
+            (cleaned_data['ORDER QTY'] == order_qty) &
+            (cleaned_data['BUYER'] == buyer) &
+            (cleaned_data['CONTRY'] == country)
+        ]
+
+        # Check for matches and calculate relative error
+        if not matches.empty:
+            st.subheader('Exact Matches Found:')
+            st.write(matches)
+
+            # Calculate and display relative errors
+            actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
+            for model_name, prediction in predictions.items():
+                relative_error = calculate_relative_error(actual_fob, prediction)
+                st.write(f'Relative Error for {model_name}: {relative_error:.2f}%')
+        else:
+            st.write("No exact matches found.")
