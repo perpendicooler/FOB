@@ -35,7 +35,7 @@ st.write(cleaned_data)
 # Input fields for user to input data
 style = st.selectbox('Select Style', cleaned_data['STYLE'].unique())
 department = st.selectbox('Select Department', cleaned_data['Department'].unique())
-product_des = st.selectbox('Product Description', '')
+product_des = st.selectbox('Product Description', cleaned_data['PRODUCT DES.'].unique()))
 order_qty = st.number_input('Order Quantity', min_value=1, step=1)
 buyer = st.selectbox('Select Buyer', cleaned_data['BUYER'].unique())
 country = st.selectbox('Select Country', cleaned_data['CONTRY'].unique())
