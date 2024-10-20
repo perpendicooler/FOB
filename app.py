@@ -60,10 +60,6 @@ if st.button('Predict FOB'):
     # Strip spaces from the input data column names
     input_data.columns = input_data.columns.str.strip()
 
-    # Print column names for debugging
-    st.write("Cleaned Data Columns:", cleaned_data.columns.tolist())
-    st.write("Input Data Columns:", input_data.columns.tolist())
-
     # Make predictions using the models
     try:
         predictions = {
