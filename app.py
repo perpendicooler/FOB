@@ -9,7 +9,7 @@ gb_model = joblib.load('gradient_boosting_model.pkl')
 xgb_model = joblib.load('xgboost_model.pkl')
 
 # Load the cleaned data
-file_path = 'FOB_cleaned.xlsx'
+file_path = 'cleaned_dataset.xlsx'
 cleaned_data = pd.read_excel(file_path)
 
 # Strip spaces from column names
