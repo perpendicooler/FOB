@@ -12,6 +12,9 @@ xgb_model = joblib.load('xgboost_model.pkl')
 file_path = 'FOB_cleaned.xlsx'
 cleaned_data = pd.read_excel(file_path)
 
+# Strip spaces from column names
+cleaned_data.columns = cleaned_data.columns.str.strip()
+
 # Function to clean data
 def clean_data(data):
     data['BUYER'] = data['BUYER'].str.upper()  # Standardize buyer names
