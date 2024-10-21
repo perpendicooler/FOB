@@ -28,8 +28,44 @@ def calculate_relative_error(actual, predicted):
 # Clean the data
 cleaned_data = clean_data(cleaned_data)
 
-# Set title
-st.title('FOB Prediction App')
+# CSS styling for center alignment and animation
+st.markdown("""
+    <style>
+    .center-title {
+        text-align: center;
+        font-family: Arial, sans-serif;
+        color: #4B0082;
+        animation: fadeIn 2s ease-in-out;
+    }
+    .center-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .stButton button {
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .stButton button:hover {
+        background-color: #4B0082;
+        color: white;
+        transform: scale(1.05);
+    }
+    .stSelectbox select {
+        transition: all 0.3s ease;
+    }
+    .stSelectbox:hover select {
+        background-color: #f0f0f0;
+        transform: scale(1.02);
+    }
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Center the title
+st.markdown('<h1 class="center-title">FOB Prediction App</h1>', unsafe_allow_html=True)
 
 # Show cleaned data in the app
 st.subheader('FOB Data')
@@ -45,7 +81,8 @@ country = st.selectbox('Select Country', cleaned_data['CONTRY'].unique())
 # Input field for ORDER QTY as a number
 order_qty = st.number_input('Enter Order Quantity', min_value=1, value=1, step=1)
 
-# Prediction button
+# Center align the prediction button
+st.markdown('<div class="center-button">', unsafe_allow_html=True)
 if st.button('Predict FOB'):
     # Prepare input data for prediction
     input_data = pd.DataFrame({
@@ -95,3 +132,4 @@ if st.button('Predict FOB'):
 
     except ValueError as e:
         st.error(f"Error during prediction: {e}")
+st.markdown('</div>', unsafe_allow_html=True)
