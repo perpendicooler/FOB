@@ -28,14 +28,17 @@ def calculate_relative_error(actual, predicted):
 # Clean the data
 cleaned_data = clean_data(cleaned_data)
 
-# CSS styling for center alignment, animation, and box designs
+# CSS styling for elegant color scheme, center alignment, animations, and box designs
 st.markdown("""
     <style>
     .center-title {
         text-align: center;
         font-family: Arial, sans-serif;
-        color: #4B0082;
+        color: #2F4F4F;  /* Dark Slate Gray for elegant look */
         animation: fadeIn 2s ease-in-out;
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 20px;
     }
     .center-button {
         display: flex;
@@ -43,34 +46,32 @@ st.markdown("""
         align-items: center;
     }
     .stButton button {
-        transition: background-color 0.3s, color 0.3s;
+        background-color: #2F4F4F; /* Elegant Dark Slate Gray */
+        color: white;
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background-color 0.3s, transform 0.3s;
     }
     .stButton button:hover {
-        background-color: #4B0082;
-        color: white;
+        background-color: #4682B4; /* Steel Blue on hover */
         transform: scale(1.05);
     }
-    .stSelectbox select {
-        transition: all 0.3s ease;
-    }
-    .stSelectbox:hover select {
-        background-color: #f0f0f0;
-        transform: scale(1.02);
-    }
     .prediction-box {
-        padding: 10px;
+        padding: 15px;
         border-radius: 10px;
         margin: 10px 0;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: bold;
         color: white;
         text-align: center;
         transition: all 0.3s ease-in-out;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
-    .lr-box { background-color: #ff5733; }
-    .rf-box { background-color: #33b5ff; }
-    .gb-box { background-color: #33ff77; }
-    .xgb-box { background-color: #a833ff; }
+    .lr-box { background-color: #D4AF37; }  /* Soft Gold */
+    .rf-box { background-color: #4B0082; }  /* Dark Slate Blue */
+    .gb-box { background-color: #4682B4; }  /* Steel Blue */
+    .xgb-box { background-color: #556B2F; }  /* Dark Olive Green */
     .exact-match {
         animation: glow 1.5s ease-in-out infinite alternate;
     }
@@ -131,7 +132,7 @@ if st.button('Predict FOB'):
             'XGBoost': xgb_model.predict(input_data)[0]
         }
 
-        # Display predictions in stylish boxes
+        # Display predictions in elegant boxes
         st.subheader('Predictions')
         st.markdown(f'<div class="prediction-box lr-box">Linear Regression Prediction: {predictions["Linear Regression"]}</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="prediction-box rf-box">Random Forest Prediction: {predictions["Random Forest"]}</div>', unsafe_allow_html=True)
