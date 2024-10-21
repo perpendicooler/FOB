@@ -28,13 +28,16 @@ def calculate_relative_error(actual, predicted):
 # Clean the data
 cleaned_data = clean_data(cleaned_data)
 
-# CSS styling for elegant color scheme, center alignment, animations, and box designs
+# CSS styling for light color scheme, center alignment, animations, and box designs
 st.markdown("""
     <style>
+    body {
+        background-color: #F5F5F5;  /* Light Grey Background */
+        font-family: Arial, sans-serif;
+        color: #2F4F4F; /* Dark Slate Gray for text */
+    }
     .center-title {
         text-align: center;
-        font-family: Arial, sans-serif;
-        color: #2F4F4F;  /* Dark Slate Gray for elegant look */
         animation: fadeIn 2s ease-in-out;
         font-size: 32px;
         font-weight: bold;
@@ -46,7 +49,7 @@ st.markdown("""
         align-items: center;
     }
     .stButton button {
-        background-color: #2F4F4F; /* Elegant Dark Slate Gray */
+        background-color: #6A99D3; /* Soft Slate Blue */
         color: white;
         font-weight: bold;
         padding: 10px;
@@ -54,24 +57,21 @@ st.markdown("""
         transition: background-color 0.3s, transform 0.3s;
     }
     .stButton button:hover {
-        background-color: #4682B4; /* Steel Blue on hover */
+        background-color: #4A7D9D; /* Darker Slate Blue on hover */
         transform: scale(1.05);
     }
     .prediction-box {
+        background-color: white;  /* Soft White for boxes */
         padding: 15px;
         border-radius: 10px;
         margin: 10px 0;
         font-size: 20px;
         font-weight: bold;
-        color: white;
+        color: #2F4F4F; /* Text color */
         text-align: center;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease-in-out;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
-    .lr-box { background-color: #D4AF37; }  /* Soft Gold */
-    .rf-box { background-color: #4B0082; }  /* Dark Slate Blue */
-    .gb-box { background-color: #4682B4; }  /* Steel Blue */
-    .xgb-box { background-color: #556B2F; }  /* Dark Olive Green */
     .exact-match {
         animation: glow 1.5s ease-in-out infinite alternate;
     }
@@ -134,10 +134,10 @@ if st.button('Predict FOB'):
 
         # Display predictions in elegant boxes
         st.subheader('Predictions')
-        st.markdown(f'<div class="prediction-box lr-box">Linear Regression Prediction: {predictions["Linear Regression"]}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="prediction-box rf-box">Random Forest Prediction: {predictions["Random Forest"]}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="prediction-box gb-box">Gradient Boosting Prediction: {predictions["Gradient Boosting"]}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="prediction-box xgb-box">XGBoost Prediction: {predictions["XGBoost"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prediction-box">Linear Regression Prediction: {predictions["Linear Regression"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prediction-box">Random Forest Prediction: {predictions["Random Forest"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prediction-box">Gradient Boosting Prediction: {predictions["Gradient Boosting"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prediction-box">XGBoost Prediction: {predictions["XGBoost"]}</div>', unsafe_allow_html=True)
 
         # Match the input data with the cleaned data for actual FOB
         matches = cleaned_data[
