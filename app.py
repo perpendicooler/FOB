@@ -62,6 +62,7 @@ st.markdown(
             font-weight: bold;
             text-align: center;
             animation: glow 1s infinite;
+            margin: 1rem 0;
         }
         @keyframes glow {
             0% { text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32; }
@@ -118,6 +119,7 @@ if st.button('Predict FOB'):
         st.subheader('Predictions')
         best_model = None
         min_relative_error = float('inf')
+        exact_match_found = False
 
         for model_name, prediction in predictions.items():
             # Match the input data with the cleaned data for actual FOB
@@ -130,8 +132,9 @@ if st.button('Predict FOB'):
                 (cleaned_data['CONTRY'] == country)
             ]
 
-            # Calculate and display relative errors if matches are found
+            # Calculate and display relative errors
             if not matches.empty:
+                exact_match_found = True
                 actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
                 relative_error = calculate_relative_error(actual_fob, prediction)
 
@@ -140,13 +143,18 @@ if st.button('Predict FOB'):
                     min_relative_error = relative_error
                     best_model = model_name
 
-                # Display predictions in boxes
-                st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
+            # Display predictions in boxes
+            st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
 
+            # Show relative error for each model
+            if matches.empty:
+                st.write(f'Relative Error for {model_name}: Not available (no match found)')
+            else:
                 st.write(f'Relative Error for {model_name}: {relative_error:.2f}%')
 
         # Display best model highlight
         if best_model:
+            st.markdown(f'<div class="exact-match">Exact Match Found!</div>', unsafe_allow_html=True)
             st.markdown(f'<div class="highlight">{best_model} has the least relative error!</div>', unsafe_allow_html=True)
         else:
             st.write("No exact matches found for the predictions.")
