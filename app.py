@@ -34,13 +34,13 @@ st.markdown(
     <style>
         /* Theme Settings */
         .app-container {
-            background-color: #00325B; /* Dark Blue */
+            background-color: #1F1F1F; /* Dark Grey */
             padding: 2rem;
             border-radius: 10px;
             color: white; /* White text color for readability */
         }
         .outer-box {
-            background-color: #e0e0e0; /* Very light grey for the outer box */
+            background-color: #FFFFFF; /* White for outer box */
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -52,7 +52,7 @@ st.markdown(
             color: #FF8C02; /* Bright Orange */
         }
         .prediction-box {
-            background-color: #ffffff; /* White for boxes */
+            background-color: #F7F7F7; /* Light grey for prediction boxes */
             padding: 1.5rem;
             border-radius: 8px;
             margin: 1rem 0;
