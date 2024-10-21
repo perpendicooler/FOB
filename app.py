@@ -42,8 +42,8 @@ col1, col2, col3 = st.columns([1, 2, 1])  # Create three columns to center the i
 with col2:  # Center column
     st.image("IND Logo PNG + (1).png", width=300)  # Set the width to a smaller size
 
-# Set title
-st.title('FOB Prediction')
+# Set title with smaller font size
+st.markdown('<h1 style="font-size: 24px;">FOB Prediction</h1>', unsafe_allow_html=True)
 
 # Show cleaned data in the app
 st.subheader('FOB Data')
