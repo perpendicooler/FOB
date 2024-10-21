@@ -127,7 +127,7 @@ with st.container():
     st.markdown('<div class="centered">', unsafe_allow_html=True)
 
     # Prediction button
-    if st.button('Predict Your FOB'):
+    if middle.button('Predict Your FOB'):
         # Prepare input data for prediction
         input_data = pd.DataFrame({
             'STYLE': [style],
