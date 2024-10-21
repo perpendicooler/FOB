@@ -183,12 +183,12 @@ with st.container():
                 st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
 
             # Display actual FOB once
-            if exact_match_found and actual_fob is not None:
-                st.markdown(f'<div class="actual-fob">Actual FOB: {actual_fob}</div>', unsafe_allow_html=True)
+            # if exact_match_found and actual_fob is not None:
+            #     st.markdown(f'<div class="actual-fob">Actual FOB: {actual_fob}</div>', unsafe_allow_html=True)
 
             # Display best model highlight
             if exact_match_found:
-                st.markdown(f'<div class="exact-match">Exact Match Found!</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="exact-match">Exact Match Found!: {actual_fob}</div>', unsafe_allow_html=True)
                 st.markdown(f'<div class="highlight">{best_model} has the least relative error: {min_relative_error:.2f}%!</div>', unsafe_allow_html=True)
             else:
                 st.write("No exact matches found for the predictions. Here are the predicted values:")
