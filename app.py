@@ -1,4 +1,3 @@
-# Import Streamlit library
 import streamlit as st
 import pandas as pd
 import joblib
@@ -65,12 +64,6 @@ st.markdown(
             animation: glow 1s infinite;
             margin: 1rem 0;
         }
-        .actual-fob-highlight {
-            color: #ff6347; /* Tomato color for actual FOB */
-            font-weight: bold;
-            text-align: center;
-            font-size: 1.2rem;
-        }
         @keyframes glow {
             0% { text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32; }
             50% { text-shadow: 0 0 20px #32cd32, 0 0 30px #32cd32; }
@@ -98,7 +91,17 @@ country = st.selectbox('Select Country', cleaned_data['CONTRY'].unique())
 # Input field for ORDER QTY as a number
 order_qty = st.number_input('Enter Order Quantity', min_value=1, value=1, step=1)
 
-# Prediction button
+# Center-align the prediction button
+st.markdown(
+    """
+    <div style="display: flex; justify-content: center; margin: 20px 0;">
+        <button style="padding: 10px 20px; font-size: 16px;">Predict FOB</button>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Prediction button with functionality
 if st.button('Predict FOB'):
     # Prepare input data for prediction
     input_data = pd.DataFrame({
@@ -127,18 +130,17 @@ if st.button('Predict FOB'):
         best_model = None
         min_relative_error = float('inf')
         exact_match_found = False
-        actual_fob = None  # Placeholder for actual FOB
 
         for model_name, prediction in predictions.items():
             # Match the input data with the cleaned data for actual FOB
-            matches = cleaned_data[(
+            matches = cleaned_data[
                 (cleaned_data['STYLE'] == style) &
                 (cleaned_data['Department'] == department) &
                 (cleaned_data['PRODUCT DES.'].str.contains(product_des, case=False)) &
                 (cleaned_data['ORDER QTY'] == order_qty) &
                 (cleaned_data['BUYER'] == buyer) &
                 (cleaned_data['CONTRY'] == country)
-            )]
+            ]
 
             # Check for exact match
             if not matches.empty:
@@ -153,10 +155,6 @@ if st.button('Predict FOB'):
 
             # Display predictions in boxes
             st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
-
-        # Display actual FOB value if found
-        if exact_match_found and actual_fob is not None:
-            st.markdown(f'<div class="prediction-box actual-fob-highlight">Actual FOB: {actual_fob} </div>', unsafe_allow_html=True)
 
         # Display best model highlight
         if exact_match_found:
