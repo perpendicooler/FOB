@@ -28,7 +28,7 @@ def calculate_relative_error(actual, predicted):
 # Clean the data
 cleaned_data = clean_data(cleaned_data)
 
-# CSS styling for center alignment and animation
+# CSS styling for center alignment, animation, and box designs
 st.markdown("""
     <style>
     .center-title {
@@ -57,9 +57,34 @@ st.markdown("""
         background-color: #f0f0f0;
         transform: scale(1.02);
     }
+    .prediction-box {
+        padding: 10px;
+        border-radius: 10px;
+        margin: 10px 0;
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+    }
+    .lr-box { background-color: #ff5733; }
+    .rf-box { background-color: #33b5ff; }
+    .gb-box { background-color: #33ff77; }
+    .xgb-box { background-color: #a833ff; }
+    .exact-match {
+        animation: glow 1.5s ease-in-out infinite alternate;
+    }
     @keyframes fadeIn {
         0% { opacity: 0; }
         100% { opacity: 1; }
+    }
+    @keyframes glow {
+        from {
+            box-shadow: 0 0 10px #FFD700;
+        }
+        to {
+            box-shadow: 0 0 20px #FFD700, 0 0 30px #FFD700, 0 0 40px #FFD700;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -106,10 +131,12 @@ if st.button('Predict FOB'):
             'XGBoost': xgb_model.predict(input_data)[0]
         }
 
-        # Display predictions
+        # Display predictions in stylish boxes
         st.subheader('Predictions')
-        for model_name, prediction in predictions.items():
-            st.write(f'{model_name} Prediction: {prediction}')
+        st.markdown(f'<div class="prediction-box lr-box">Linear Regression Prediction: {predictions["Linear Regression"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prediction-box rf-box">Random Forest Prediction: {predictions["Random Forest"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prediction-box gb-box">Gradient Boosting Prediction: {predictions["Gradient Boosting"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prediction-box xgb-box">XGBoost Prediction: {predictions["XGBoost"]}</div>', unsafe_allow_html=True)
 
         # Match the input data with the cleaned data for actual FOB
         matches = cleaned_data[
@@ -124,6 +151,9 @@ if st.button('Predict FOB'):
         # Calculate and display relative errors if matches are found
         if not matches.empty:
             actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
+            st.markdown('<div class="center-title exact-match">Exact Match Found!</div>', unsafe_allow_html=True)
+            st.write(f"Actual FOB: {actual_fob}")
+
             for model_name, prediction in predictions.items():
                 relative_error = calculate_relative_error(actual_fob, prediction)
                 st.write(f'Relative Error for {model_name}: {relative_error:.2f}%')
