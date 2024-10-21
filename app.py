@@ -32,18 +32,27 @@ cleaned_data = clean_data(cleaned_data)
 st.markdown(
     """
     <style>
+        /* Theme Settings */
         .app-container {
-            background-color: #f5f5f5; /* Light grey background */
+            background-color: #00325B; /* Dark Blue */
             padding: 2rem;
             border-radius: 10px;
+            color: white; /* White text color for readability */
+        }
+        .outer-box {
+            background-color: #e0e0e0; /* Very light grey for the outer box */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
         }
         h1 {
             text-align: center;
             font-size: 2rem;  /* Shorter font size for the title */
-            color: #333;
+            color: #FF8C02; /* Bright Orange */
         }
         .prediction-box {
-            background-color: #e0e0e0; /* Light grey for boxes */
+            background-color: #ffffff; /* White for boxes */
             padding: 1.5rem;
             border-radius: 8px;
             margin: 1rem 0;
@@ -54,7 +63,7 @@ st.markdown(
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
         .highlight {
-            color: green; /* Highlight color for best prediction */
+            color: #FF8C02; /* Highlight color for best prediction */
             font-weight: bold;
         }
         .exact-match {
@@ -100,87 +109,92 @@ st.title('FOB Prediction')
 st.subheader('FOB Data')
 st.write(cleaned_data)
 
-# Input fields for user to input data
-style = st.selectbox('Select Style', cleaned_data['STYLE'].unique())
-department = st.selectbox('Select Department', cleaned_data['Department'].unique())
-product_des = st.selectbox('Product Description', cleaned_data['PRODUCT DES.'].unique())
-buyer = st.selectbox('Select Buyer', cleaned_data['BUYER'].unique())
-country = st.selectbox('Select Country', cleaned_data['CONTRY'].unique())
+# Create an outer box for input fields and button
+with st.container():
+    st.markdown('<div class="outer-box">', unsafe_allow_html=True)
 
-# Input field for ORDER QTY as a number
-order_qty = st.number_input('Enter Order Quantity', min_value=1, value=1, step=1)
+    # Input fields for user to input data
+    style = st.selectbox('Select Style', cleaned_data['STYLE'].unique())
+    department = st.selectbox('Select Department', cleaned_data['Department'].unique())
+    product_des = st.selectbox('Product Description', cleaned_data['PRODUCT DES.'].unique())
+    buyer = st.selectbox('Select Buyer', cleaned_data['BUYER'].unique())
+    country = st.selectbox('Select Country', cleaned_data['CONTRY'].unique())
 
-# Center the button using a div
-st.markdown('<div class="centered">', unsafe_allow_html=True)
+    # Input field for ORDER QTY as a number
+    order_qty = st.number_input('Enter Order Quantity', min_value=1, value=1, step=1)
 
-# Prediction button
-if st.button('Predict FOB'):
-    # Prepare input data for prediction
-    input_data = pd.DataFrame({
-        'STYLE': [style],
-        'Department': [department],
-        'PRODUCT DES.': [product_des],
-        'ORDER QTY': [order_qty],
-        'BUYER': [buyer],
-        'CONTRY': [country]
-    })
+    # Center the button using a div
+    st.markdown('<div class="centered">', unsafe_allow_html=True)
 
-    # Strip spaces from the input data column names
-    input_data.columns = input_data.columns.str.strip()
+    # Prediction button
+    if st.button('Predict Your FOB'):
+        # Prepare input data for prediction
+        input_data = pd.DataFrame({
+            'STYLE': [style],
+            'Department': [department],
+            'PRODUCT DES.': [product_des],
+            'ORDER QTY': [order_qty],
+            'BUYER': [buyer],
+            'CONTRY': [country]
+        })
 
-    # Make predictions using the models
-    try:
-        predictions = {
-            'Linear Regression': lr_model.predict(input_data)[0],
-            'Random Forest': rf_model.predict(input_data)[0],
-            'Gradient Boosting': gb_model.predict(input_data)[0],
-            'XGBoost': xgb_model.predict(input_data)[0]
-        }
+        # Strip spaces from the input data column names
+        input_data.columns = input_data.columns.str.strip()
 
-        # Display predictions
-        st.subheader('Predictions')
-        best_model = None
-        min_relative_error = float('inf')
-        exact_match_found = False
-        actual_fob = None  # Initialize actual_fob to store the matched FOB
+        # Make predictions using the models
+        try:
+            predictions = {
+                'Linear Regression': lr_model.predict(input_data)[0],
+                'Random Forest': rf_model.predict(input_data)[0],
+                'Gradient Boosting': gb_model.predict(input_data)[0],
+                'XGBoost': xgb_model.predict(input_data)[0]
+            }
 
-        for model_name, prediction in predictions.items():
-            # Match the input data with the cleaned data for actual FOB
-            matches = cleaned_data[
-                (cleaned_data['STYLE'] == style) &
-                (cleaned_data['Department'] == department) &
-                (cleaned_data['PRODUCT DES.'].str.contains(product_des, case=False)) &
-                (cleaned_data['ORDER QTY'] == order_qty) &
-                (cleaned_data['BUYER'] == buyer) &
-                (cleaned_data['CONTRY'] == country)
-            ]
+            # Display predictions
+            st.subheader('Predictions')
+            best_model = None
+            min_relative_error = float('inf')
+            exact_match_found = False
+            actual_fob = None  # Initialize actual_fob to store the matched FOB
 
-            # Check for exact match
-            if not matches.empty:
-                exact_match_found = True
-                actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
-                relative_error = calculate_relative_error(actual_fob, prediction)
+            for model_name, prediction in predictions.items():
+                # Match the input data with the cleaned data for actual FOB
+                matches = cleaned_data[
+                    (cleaned_data['STYLE'] == style) &
+                    (cleaned_data['Department'] == department) &
+                    (cleaned_data['PRODUCT DES.'].str.contains(product_des, case=False)) &
+                    (cleaned_data['ORDER QTY'] == order_qty) &
+                    (cleaned_data['BUYER'] == buyer) &
+                    (cleaned_data['CONTRY'] == country)
+                ]
 
-                # Check for the model with the least relative error
-                if relative_error < min_relative_error:
-                    min_relative_error = relative_error
-                    best_model = model_name
+                # Check for exact match
+                if not matches.empty:
+                    exact_match_found = True
+                    actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
+                    relative_error = calculate_relative_error(actual_fob, prediction)
 
-            # Display predictions in boxes
-            st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
+                    # Check for the model with the least relative error
+                    if relative_error < min_relative_error:
+                        min_relative_error = relative_error
+                        best_model = model_name
 
-        # Display actual FOB once
-        if exact_match_found and actual_fob is not None:
-            st.markdown(f'<div class="actual-fob">Actual FOB: {actual_fob}</div>', unsafe_allow_html=True)
+                # Display predictions in boxes
+                st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
 
-        # Display best model highlight
-        if exact_match_found:
-            st.markdown(f'<div class="exact-match">Exact Match Found!</div>', unsafe_allow_html=True)
-            st.markdown(f'<div class="highlight">{best_model} has the least relative error: {min_relative_error:.2f}%!</div>', unsafe_allow_html=True)
-        else:
-            st.write("No exact matches found for the predictions. Here are the predicted values:")
+            # Display actual FOB once
+            if exact_match_found and actual_fob is not None:
+                st.markdown(f'<div class="actual-fob">Actual FOB: {actual_fob}</div>', unsafe_allow_html=True)
 
-    except ValueError as e:
-        st.error(f"Error during prediction: {e}")
+            # Display best model highlight
+            if exact_match_found:
+                st.markdown(f'<div class="exact-match">Exact Match Found!</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="highlight">{best_model} has the least relative error: {min_relative_error:.2f}%!</div>', unsafe_allow_html=True)
+            else:
+                st.write("No exact matches found for the predictions. Here are the predicted values:")
 
-st.markdown('</div>', unsafe_allow_html=True)  # Close centered div for button
+        except ValueError as e:
+            st.error(f"Error during prediction: {e}")
+
+    st.markdown('</div>', unsafe_allow_html=True)  # Close centered div for button
+    st.markdown('</div>', unsafe_allow_html=True)  # Close outer box div
