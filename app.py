@@ -120,17 +120,18 @@ if st.button('Predict FOB'):
         best_model = None
         min_relative_error = float('inf')
         exact_match_found = False
+        actual_fob = None  # Placeholder for actual FOB
 
         for model_name, prediction in predictions.items():
             # Match the input data with the cleaned data for actual FOB
-            matches = cleaned_data[
+            matches = cleaned_data[(
                 (cleaned_data['STYLE'] == style) &
                 (cleaned_data['Department'] == department) &
                 (cleaned_data['PRODUCT DES.'].str.contains(product_des, case=False)) &
                 (cleaned_data['ORDER QTY'] == order_qty) &
                 (cleaned_data['BUYER'] == buyer) &
                 (cleaned_data['CONTRY'] == country)
-            ]
+            )]
 
             # Check for exact match
             if not matches.empty:
@@ -145,6 +146,10 @@ if st.button('Predict FOB'):
 
             # Display predictions in boxes
             st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
+
+        # Display actual FOB value if found
+        if exact_match_found and actual_fob is not None:
+            st.markdown(f'<div class="prediction-box">Actual FOB: {actual_fob} </div>', unsafe_allow_html=True)
 
         # Display best model highlight
         if exact_match_found:
