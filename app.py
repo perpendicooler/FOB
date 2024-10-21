@@ -1,3 +1,4 @@
+# Import Streamlit library
 import streamlit as st
 import pandas as pd
 import joblib
@@ -63,6 +64,12 @@ st.markdown(
             text-align: center;
             animation: glow 1s infinite;
             margin: 1rem 0;
+        }
+        .actual-fob-highlight {
+            color: #ff6347; /* Tomato color for actual FOB */
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2rem;
         }
         @keyframes glow {
             0% { text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32; }
@@ -149,7 +156,7 @@ if st.button('Predict FOB'):
 
         # Display actual FOB value if found
         if exact_match_found and actual_fob is not None:
-            st.markdown(f'<div class="prediction-box">Actual FOB: {actual_fob} </div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="prediction-box actual-fob-highlight">Actual FOB: {actual_fob} </div>', unsafe_allow_html=True)
 
         # Display best model highlight
         if exact_match_found:
