@@ -83,6 +83,11 @@ st.markdown(
 # Set title
 st.title('FOB Prediction App')
 
+# Center the logo at the top of the page
+st.markdown('<div class="centered">', unsafe_allow_html=True)
+st.image("IND Logo PNG + (1).png", width=300)  # Set the width to a smaller size
+st.markdown('</div>', unsafe_allow_html=True)
+
 # Show cleaned data in the app
 st.subheader('FOB Data')
 st.write(cleaned_data)
@@ -96,9 +101,6 @@ country = st.selectbox('Select Country', cleaned_data['CONTRY'].unique())
 
 # Input field for ORDER QTY as a number
 order_qty = st.number_input('Enter Order Quantity', min_value=1, value=1, step=1)
-
-# Add logo image and center the button
-st.image("IND Logo PNG + (1).png", width=300)  # Set the width to a smaller size
 
 # Center the button using a div
 st.markdown('<div class="centered">', unsafe_allow_html=True)
@@ -168,4 +170,4 @@ if st.button('Predict FOB'):
     except ValueError as e:
         st.error(f"Error during prediction: {e}")
 
-st.markdown('</div>', unsafe_allow_html=True)  # Close centered div
+st.markdown('</div>', unsafe_allow_html=True)  # Close centered div for button
