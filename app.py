@@ -125,7 +125,7 @@ with st.container():
 
     # Center the button using a div
     st.markdown('<div class="centered">', unsafe_allow_html=True)
-
+    left, middle, right = st.columns(3)
     # Prediction button
     if middle.button('Predict Your FOB'):
         # Prepare input data for prediction
