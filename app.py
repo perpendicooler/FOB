@@ -39,7 +39,7 @@ st.markdown(
         }
         h1 {
             text-align: center;
-            font-size: 2.5rem;
+            font-size: 2rem;  /* Shorter font size for the title */
             color: #333;
         }
         .prediction-box {
@@ -75,24 +75,26 @@ st.markdown(
             50% { text-shadow: 0 0 20px #32cd32, 0 0 30px #32cd32; }
             100% { text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32; }
         }
-        .actual-smv {
-            color: blue; /* Different font color for actual SMV */
+        .actual-fob {
+            color: blue; /* Different font color for actual FOB */
             font-weight: bold;
             font-size: 1.2rem;
+            text-align: center;
+            margin: 1rem 0;
         }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# Set title
-st.title('FOB Prediction App')
-
 # Centered logo using st.image
 col1, col2, col3 = st.columns([1, 2, 1])  # Create three columns to center the image
 
 with col2:  # Center column
     st.image("IND Logo PNG + (1).png", width=300)  # Set the width to a smaller size
+
+# Set title (shorter than the logo)
+st.title('FOB Prediction')
 
 # Show cleaned data in the app
 st.subheader('FOB Data')
@@ -140,6 +142,7 @@ if st.button('Predict FOB'):
         best_model = None
         min_relative_error = float('inf')
         exact_match_found = False
+        actual_fob = None  # Initialize actual_fob to store the matched FOB
 
         for model_name, prediction in predictions.items():
             # Match the input data with the cleaned data for actual FOB
@@ -158,9 +161,6 @@ if st.button('Predict FOB'):
                 actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
                 relative_error = calculate_relative_error(actual_fob, prediction)
 
-                # Display the actual SMV
-                st.markdown(f'<div class="actual-smv">Actual SMV: {actual_fob}</div>', unsafe_allow_html=True)
-
                 # Check for the model with the least relative error
                 if relative_error < min_relative_error:
                     min_relative_error = relative_error
@@ -168,6 +168,10 @@ if st.button('Predict FOB'):
 
             # Display predictions in boxes
             st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
+
+        # Display actual FOB once
+        if exact_match_found and actual_fob is not None:
+            st.markdown(f'<div class="actual-fob">Actual FOB: {actual_fob}</div>', unsafe_allow_html=True)
 
         # Display best model highlight
         if exact_match_found:
