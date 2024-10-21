@@ -28,24 +28,16 @@ def calculate_relative_error(actual, predicted):
 # Clean the data
 cleaned_data = clean_data(cleaned_data)
 
-# Streamlit theme settings
-st.set_page_config(
-    page_title="FOB Prediction App",
-    page_icon="🏷️",
-    layout="wide",
-)
-
 # CSS styling for light color scheme
 st.markdown(
     """
     <style>
         /* Theme Settings */
         .app-container {
-            background-color: #f0f0f5; /* Light background */
+            background-color: #1F1F1F; /* Dark Grey */
             padding: 2rem;
             border-radius: 10px;
-            color: #262730; /* Dark text color */
-            font-family: Arial, sans-serif; /* Font */
+            color: white; /* White text color for readability */
         }
         .outer-box {
             background-color: #FFFFFF; /* White for outer box */
@@ -57,7 +49,7 @@ st.markdown(
         h1 {
             text-align: center;
             font-size: 2rem;  /* Shorter font size for the title */
-            color: black; /* Black color for title */
+            color: #FF8C02; /* Bright Orange */
         }
         .prediction-box {
             background-color: #F7F7F7; /* Light grey for prediction boxes */
@@ -71,7 +63,7 @@ st.markdown(
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
         .highlight {
-            color: #6eb52f; /* Highlight color for best prediction */
+            color: #FF8C02; /* Highlight color for best prediction */
             font-weight: bold;
         }
         .exact-match {
