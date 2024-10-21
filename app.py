@@ -64,6 +64,12 @@ st.markdown(
             animation: glow 1s infinite;
             margin: 1rem 0;
         }
+        .centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
         @keyframes glow {
             0% { text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32; }
             50% { text-shadow: 0 0 20px #32cd32, 0 0 30px #32cd32; }
@@ -91,17 +97,13 @@ country = st.selectbox('Select Country', cleaned_data['CONTRY'].unique())
 # Input field for ORDER QTY as a number
 order_qty = st.number_input('Enter Order Quantity', min_value=1, value=1, step=1)
 
-# Center-align the prediction button
-st.markdown(
-    """
-    <div style="display: flex; justify-content: center; margin: 20px 0;">
-        <button style="padding: 10px 20px; font-size: 16px;">Predict FOB</button>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# Add logo image and center the button
+st.image("IND Logo PNG + (1).png", width=300)  # Set the width to a smaller size
 
-# Prediction button with functionality
+# Center the button using a div
+st.markdown('<div class="centered">', unsafe_allow_html=True)
+
+# Prediction button
 if st.button('Predict FOB'):
     # Prepare input data for prediction
     input_data = pd.DataFrame({
@@ -165,3 +167,5 @@ if st.button('Predict FOB'):
 
     except ValueError as e:
         st.error(f"Error during prediction: {e}")
+
+st.markdown('</div>', unsafe_allow_html=True)  # Close centered div
