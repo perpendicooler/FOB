@@ -75,6 +75,11 @@ st.markdown(
             50% { text-shadow: 0 0 20px #32cd32, 0 0 30px #32cd32; }
             100% { text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32; }
         }
+        .actual-smv {
+            color: blue; /* Different font color for actual SMV */
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
     </style>
     """,
     unsafe_allow_html=True
@@ -83,10 +88,11 @@ st.markdown(
 # Set title
 st.title('FOB Prediction App')
 
-# Center the logo at the top of the page
-st.markdown('<div class="centered">', unsafe_allow_html=True)
-st.image("IND Logo PNG + (1).png", width=300)  # Set the width to a smaller size
-st.markdown('</div>', unsafe_allow_html=True)
+# Centered logo using st.image
+col1, col2, col3 = st.columns([1, 2, 1])  # Create three columns to center the image
+
+with col2:  # Center column
+    st.image("IND Logo PNG + (1).png", width=300)  # Set the width to a smaller size
 
 # Show cleaned data in the app
 st.subheader('FOB Data')
@@ -151,6 +157,9 @@ if st.button('Predict FOB'):
                 exact_match_found = True
                 actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
                 relative_error = calculate_relative_error(actual_fob, prediction)
+
+                # Display the actual SMV
+                st.markdown(f'<div class="actual-smv">Actual SMV: {actual_fob}</div>', unsafe_allow_html=True)
 
                 # Check for the model with the least relative error
                 if relative_error < min_relative_error:
