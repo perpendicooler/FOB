@@ -146,16 +146,12 @@ if st.button('Predict FOB'):
             # Display predictions in boxes
             st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
 
-            # Show relative error for each model
-            if matches.empty:
-                st.write(f'Relative Error for {model_name}: Not available (no match found)')
-            else:
-                st.write(f'Relative Error for {model_name}: {relative_error:.2f}%')
-
         # Display best model highlight
         if best_model:
             st.markdown(f'<div class="exact-match">Exact Match Found!</div>', unsafe_allow_html=True)
             st.markdown(f'<div class="highlight">{best_model} has the least relative error!</div>', unsafe_allow_html=True)
+        elif not exact_match_found:
+            st.write("No exact matches found for the predictions. Here are the predicted values:")
         else:
             st.write("No exact matches found for the predictions.")
 
