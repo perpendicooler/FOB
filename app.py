@@ -49,7 +49,7 @@ st.markdown(
         h1 {
             text-align: center;
             font-size: 2rem;  /* Shorter font size for the title */
-            color: #FF8C02; /* Bright Orange */
+            color: #000000; /* Bright Orange */
         }
         .prediction-box {
             background-color: #F7F7F7; /* Light grey for prediction boxes */
