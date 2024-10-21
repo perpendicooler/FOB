@@ -28,70 +28,53 @@ def calculate_relative_error(actual, predicted):
 # Clean the data
 cleaned_data = clean_data(cleaned_data)
 
-# CSS styling for light color scheme, center alignment, animations, and box designs
-st.markdown("""
+# CSS styling for light color scheme
+st.markdown(
+    """
     <style>
-    body {
-        background-color: #F5F5F5;  /* Light Grey Background */
-        font-family: Arial, sans-serif;
-        color: #2F4F4F; /* Dark Slate Gray for text */
-    }
-    .center-title {
-        text-align: center;
-        animation: fadeIn 2s ease-in-out;
-        font-size: 32px;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
-    .center-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .stButton button {
-        background-color: #6A99D3; /* Soft Slate Blue */
-        color: white;
-        font-weight: bold;
-        padding: 10px;
-        border-radius: 8px;
-        transition: background-color 0.3s, transform 0.3s;
-    }
-    .stButton button:hover {
-        background-color: #4A7D9D; /* Darker Slate Blue on hover */
-        transform: scale(1.05);
-    }
-    .prediction-box {
-        background-color: white;  /* Soft White for boxes */
-        padding: 15px;
-        border-radius: 10px;
-        margin: 10px 0;
-        font-size: 20px;
-        font-weight: bold;
-        color: #2F4F4F; /* Text color */
-        text-align: center;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease-in-out;
-    }
-    .exact-match {
-        animation: glow 1.5s ease-in-out infinite alternate;
-    }
-    @keyframes fadeIn {
-        0% { opacity: 0; }
-        100% { opacity: 1; }
-    }
-    @keyframes glow {
-        from {
-            box-shadow: 0 0 10px #FFD700;
+        .app-container {
+            background-color: #f5f5f5; /* Light grey background */
+            padding: 2rem;
+            border-radius: 10px;
         }
-        to {
-            box-shadow: 0 0 20px #FFD700, 0 0 30px #FFD700, 0 0 40px #FFD700;
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
         }
-    }
+        .prediction-box {
+            background-color: #e0e0e0; /* Light grey for boxes */
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        .prediction-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .highlight {
+            color: green; /* Highlight color for best prediction */
+            font-weight: bold;
+        }
+        .exact-match {
+            color: #32cd32; /* Light green for exact match */
+            font-weight: bold;
+            text-align: center;
+            animation: glow 1s infinite;
+        }
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32; }
+            50% { text-shadow: 0 0 20px #32cd32, 0 0 30px #32cd32; }
+            100% { text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32; }
+        }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
-# Center the title
-st.markdown('<h1 class="center-title">FOB Prediction App</h1>', unsafe_allow_html=True)
+# Set title
+st.title('FOB Prediction App')
 
 # Show cleaned data in the app
 st.subheader('FOB Data')
@@ -107,15 +90,14 @@ country = st.selectbox('Select Country', cleaned_data['CONTRY'].unique())
 # Input field for ORDER QTY as a number
 order_qty = st.number_input('Enter Order Quantity', min_value=1, value=1, step=1)
 
-# Center align the prediction button
-st.markdown('<div class="center-button">', unsafe_allow_html=True)
+# Prediction button
 if st.button('Predict FOB'):
     # Prepare input data for prediction
     input_data = pd.DataFrame({
         'STYLE': [style],
         'Department': [department],
         'PRODUCT DES.': [product_des],
-        'ORDER QTY': [order_qty],  # Use the order quantity from the number input
+        'ORDER QTY': [order_qty],
         'BUYER': [buyer],
         'CONTRY': [country]
     })
@@ -132,35 +114,42 @@ if st.button('Predict FOB'):
             'XGBoost': xgb_model.predict(input_data)[0]
         }
 
-        # Display predictions in elegant boxes
+        # Display predictions
         st.subheader('Predictions')
-        st.markdown(f'<div class="prediction-box">Linear Regression Prediction: {predictions["Linear Regression"]}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="prediction-box">Random Forest Prediction: {predictions["Random Forest"]}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="prediction-box">Gradient Boosting Prediction: {predictions["Gradient Boosting"]}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="prediction-box">XGBoost Prediction: {predictions["XGBoost"]}</div>', unsafe_allow_html=True)
+        best_model = None
+        min_relative_error = float('inf')
 
-        # Match the input data with the cleaned data for actual FOB
-        matches = cleaned_data[
-            (cleaned_data['STYLE'] == style) &
-            (cleaned_data['Department'] == department) &
-            (cleaned_data['PRODUCT DES.'].str.contains(product_des, case=False)) &
-            (cleaned_data['ORDER QTY'] == order_qty) &  # Match the order quantity
-            (cleaned_data['BUYER'] == buyer) &
-            (cleaned_data['CONTRY'] == country)
-        ]
+        for model_name, prediction in predictions.items():
+            # Match the input data with the cleaned data for actual FOB
+            matches = cleaned_data[
+                (cleaned_data['STYLE'] == style) &
+                (cleaned_data['Department'] == department) &
+                (cleaned_data['PRODUCT DES.'].str.contains(product_des, case=False)) &
+                (cleaned_data['ORDER QTY'] == order_qty) &
+                (cleaned_data['BUYER'] == buyer) &
+                (cleaned_data['CONTRY'] == country)
+            ]
 
-        # Calculate and display relative errors if matches are found
-        if not matches.empty:
-            actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
-            st.markdown('<div class="center-title exact-match">Exact Match Found!</div>', unsafe_allow_html=True)
-            st.write(f"Actual FOB: {actual_fob}")
-
-            for model_name, prediction in predictions.items():
+            # Calculate and display relative errors if matches are found
+            if not matches.empty:
+                actual_fob = matches['FOB'].values[0]  # Assuming you want the FOB of the first match
                 relative_error = calculate_relative_error(actual_fob, prediction)
+
+                # Check for the model with the least relative error
+                if relative_error < min_relative_error:
+                    min_relative_error = relative_error
+                    best_model = model_name
+
+                # Display predictions in boxes
+                st.markdown(f'<div class="prediction-box"> {model_name} Prediction: {prediction} </div>', unsafe_allow_html=True)
+
                 st.write(f'Relative Error for {model_name}: {relative_error:.2f}%')
+
+        # Display best model highlight
+        if best_model:
+            st.markdown(f'<div class="highlight">{best_model} has the least relative error!</div>', unsafe_allow_html=True)
         else:
             st.write("No exact matches found for the predictions.")
 
     except ValueError as e:
         st.error(f"Error during prediction: {e}")
-st.markdown('</div>', unsafe_allow_html=True)
