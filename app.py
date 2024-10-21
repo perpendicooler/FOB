@@ -198,3 +198,7 @@ with st.container():
 
     st.markdown('</div>', unsafe_allow_html=True)  # Close centered div for button
     st.markdown('</div>', unsafe_allow_html=True)  # Close outer box div
+
+# Footer with acknowledgments
+st.markdown("---")
+st.write("Developed by [INDESORE](https://www.indesore.com/) - All Rights Reserved © 2024")
