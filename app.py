@@ -111,7 +111,7 @@ st.write(cleaned_data)
 
 # Create an outer box for input fields and button
 with st.container():
-    st.markdown('<div class="outer-box">', unsafe_allow_html=True)
+    # st.markdown('<div class="outer-box">', unsafe_allow_html=True)
 
     # Input fields for user to input data
     style = st.selectbox('Select Style', cleaned_data['STYLE'].unique())
